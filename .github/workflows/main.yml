@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REPO_NAME: rishithamarri
-      IMAGE_NAME: Login-Signup_Form
+      IMAGE_NAME: login-signup-form
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
