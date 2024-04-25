@@ -1,0 +1,29 @@
+name: Build-and-Push-Image
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Build-and-Push-Docker-Image:
+    runs-on: ubuntu-latest
+    env: 
+      REPO_NAME: rishithamarri
+      IMAGE_NAME: Login-Signup_Form
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set env
+        run: |
+          echo "GITHUB_BRANCH= ($GITHUB_REF_NAME-$GITHUB-SHA") >> GITHUB_ENV
+
+      - name: Build-Docker-Image
+        run: |
+          docker build -t $REPO_NAME/$IMAGE_NAME:$GITHUB-REF-NAME-$GITHUB-SHA .
+
+      - name: Push-Image-to-Docker-Hub
+        run: |
+          echo {{ secrets.DOCKERHUB_TOKEN }} | docker login --username  $REPO_NAME --password-stdin
+          docker push $REPO_NAME/$IMAGE_NAME:$GITHUB-REF-NAME-$GITHUB-SHA
+    
