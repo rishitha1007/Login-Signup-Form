@@ -20,10 +20,10 @@ jobs:
 
       - name: Build-Docker-Image
         run: |
-          docker build -t $REPO_NAME/$IMAGE_NAME:$GITHUB-REF-NAME-$GITHUB-SHA .
+          docker build -t $REPO_NAME/$IMAGE_NAME:$GITHUB_REF_NAME-$GITHUB-SHA .
 
       - name: Push-Image-to-Docker-Hub
         run: |
           echo {{ secrets.DOCKERHUB_TOKEN }} | docker login --username  $REPO_NAME --password-stdin
-          docker push $REPO_NAME/$IMAGE_NAME:$GITHUB-REF-NAME-$GITHUB-SHA
+          docker push $REPO_NAME/$IMAGE_NAME:$GITHUB_REF_NAME-$GITHUB-SHA
     
