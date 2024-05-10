@@ -10,6 +10,8 @@ jobs:
     env: 
       REPO_NAME: rishithamarri
       IMAGE_NAME: login-signup-form
+      GITHUB_REPO: rishitha1007
+      GITOPS_REPO: Gitops-Login-Signup-Form
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -26,4 +28,15 @@ jobs:
         run: |
           echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username $REPO_NAME --password-stdin
           docker push $REPO_NAME/$IMAGE_NAME:$GITHUB_REF_NAME-$GITHUB-SHA
+
+      - name: Manifest file
+        run: |
+          git clone https://${{ secrets.AWS_GITHUB_USER }}:${{ secrets.AWS_GITHUB_TOKEN }}@github.com/$GITHUB_REPO/$GITOPS_REPO
+          cd $GITOPS_REPO
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@wohlig.com"
+          yq e '.spec.template.spec.containers[0].image = "${{ env.REPO_NAME }}/${{ env.IMAGE_NAME }}:${{ env.GITHUB_BRANCH }}"' -i deployments/deployment.yaml
+          git add .
+          git commit -m "updating newer image"
+          git push --set-upstream origin main\
     
